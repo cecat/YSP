@@ -62,29 +62,27 @@ general:
   top_k: 10                  # Number of top scoring classes to analyze (default 10)
   log_level: INFO            # Default INFO. In order of decreasing verbosity:
                              # DEBUG->INFO->WARNING->ERROR->CRITICAL 
-  log_everything: true        # Log classes/groups even if they are not specified in sounds/track below
-  ffmpeg_debug: true        # Log ffmpeg stderr (a firehose - includes errors and info)
+  log_everything: true       # Log classes/groups even if they are not specified in sounds/track below
+  ffmpeg_debug: true         # Log ffmpeg stderr (a firehose - includes errors and info)
                              #   Must also have log_level set to DEBUG
 
 # EVENTS (define 'event' parameters)
 events:
-  window_detect: 5              # Number of samples (~1s each) to examine to determine 
-                                #   if a sound is persistent.
-  persistence: 2                # Number of detections within window_detect to consider
-                                #   a sound event has started.
-  decay: 10                     # Number of waveforms without the sound to consider 
-                                #   the sound event has stopped.
+  window_detect: 5           # Number of samples (~1s each) to examine to determine 
+                             #   if a sound is persistent.
+  persistence: 2             # Number of detections within window_detect to consider
+                             #   a sound event has started.
+  decay: 10                  # Number of waveforms without the sound to consider 
+                             #   the sound event has stopped.
 
 
 # SOURCES
 
 cameras:
-  myCam:
+  myCam:                     # example of a UniFi NVR rtsp feed
     ffmpeg:
       inputs:
-        #- path: "rtsp://10.0.4.73:7447/65dd5a1900f4cb70dffa2143_1"
-        # tailscale
-      - path: "rtsp://100.112.45.90:7447/65dd5a1900f4cb70dffa2143_1"
+      - path: "rtsp://<IP_address>:7447/65dd5a1900f4cb70dffa2143_1"
 
 # sound groups to listen for, and optional individual thresholds (will override
 # reporting_threshold above in general settings). 
