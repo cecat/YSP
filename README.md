@@ -64,8 +64,6 @@ When you are done running YSP you can exit your virtual environment with *deacti
 The code uses a configuration file, *microphones.yaml*, to 
 specify sound sourceas (RTSP feeds) and to set up a number
 of options described below.
-where the parameters for determining the start and stop of a sound event
-are configurable.
 
 The code does the following (*italics* parameters are configurable):
 
@@ -77,16 +75,17 @@ The code does the following (*italics* parameters are configurable):
 3. Aggregate those *top_k* scoring sound classes into groups such as "people," "music",
    "insects," or "birds." This uses a modified yamnet_class_map.csv where each
    of the 521 native YAMNet classes has been grouped and renamed as groupname.classname.
+   (more about this below)
 4. Assign a composite score to each group with classes that appear in the *top_k*,
    based on the individual scores of the classes from that group that are detected
    in the *top_k*. 
-5. Detects the start and end of "sound events" defined by three configurable
+5. Detect the start and end of "sound events" defined by three configurable
    parameters (see configuration instructions below).
-6. Logs detected sounds, groups, and sound events in a .csv file for analysis,
+6. Log detected sounds, groups, and sound events in a .csv file for analysis,
    e.g., using 
-    [SoundViz](https://github.com/cecat/soundviz),
-   whichvisualizes events over time for each sound source, the distribution of 
-events by group, and the distribution of classes detected with each group.
+   [SoundViz](https://github.com/cecat/soundviz),
+   which visualizes events over time for each sound source, the distribution of 
+   events by group, and the distribution of classes detected with each group.
 
 ### Modify the Configuration File (*microphones.yaml*)
 
@@ -107,8 +106,6 @@ general:
   log_level: INFO            # Default INFO. In order of decreasing verbosity:
                              # DEBUG->INFO->WARNING->ERROR->CRITICAL 
   log_everything: true       # Log classes/groups even if they are not specified in sounds/track below
-  ffmpeg_debug: true         # Log ffmpeg stderr (a firehose - includes errors and info)
-                             #   Must also have log_level set to DEBUG
 
 # EVENTS (define 'event' parameters)
 events:
@@ -151,21 +148,25 @@ sounds:
 
 - **noise_threshold**: Default 0.1 - Many sound classes will have very low scores, so we filter these 
 out before processing the composite score for a sound group.
-- **default_min_score**: Default 0.4 - When reporting to scores we ignore any groups with
+- **default_min_score**: Default 0.5 - When reporting to scores we ignore any groups with
 scores below this value.
-- **top_k**: YAMNet scores all 520 classes, we analyze the top_k highest scoring classes,
+- **top_k**: Default 10 - YAMNet scores all 520 classes, we analyze the top_k highest scoring classes,
 ignoring classes with scores below *noise_threshold*.
-- **log_level**: Level of detail to be logged. Levels are
+- **log_level**: Default INFO. Level of detail to be sent to stdout. Levels are
 DEBUG->INFO->WARNING->ERROR->CRITICAL
-in order of decreasing verbosity.
-- **log_everything**: Log *all* classes/groups even if they are not specified in sounds/track below
-- **ffmpeg_debug**: Logs all ffmpeg stderr messages, which have no codes nor does ffmpeg
-differentiate between info and errors - so it's a firehose (coming from all n sources).
+in order of decreasing verbosity.  If set to DEBUG, all messages logged will also go to stdout (allowing
+you to watch in real time, which is useful if you are also listening to the feed (e.g., using an app
+like VLC).
+- **log_everything**: Default False. By default, only classes/groups/events associated with the track->sounds
+list are logged.  If set to True, YSP will log *all* classes/groups even if they are not specified in track->sounds.
 
 **Events**
+These three parameters define what you want to consider as a persistent sound "event" such as associated with
+a barking dog (animals group), a siren (alert group), etc.  Sound events are detected based on group scorss rather
+than individual class scores.
 
-- **window_detect**: Number of samples (~1s each) to examine to determine if a sound is persistent.
-- **persistence**:   Number of detections within window_detect to consider a sound event has started.
+- **window_detect**: Number of waveforms (~1s each) to examine to determine if a sound is persistent.
+- **persistence**:   Number of detections within window_detect to consider that a sound event has started.
 - **decay**:         Number of waveforms without the sound to consider the sound event has stopped.
 
 **Cameras**
@@ -177,10 +178,8 @@ differentiate between info and errors - so it's a firehose (coming from all n so
 
 **Sounds**
 
-Note that *Nothing will be reported if no sound
-groups are listed here (unless you set log_everything to true).*
-If no *min_score* is set for a group, the *default_min_score*
-(General parameters above) is used.
+Note that *Nothing will be reported if no sound groups are listed here (unless you set log_everything to true).*
+If no *min_score* is set for a group, the *default_min_score* (General parameters above) is used for that group.
 
 Available sound groups are:
 - aircraft
@@ -202,17 +201,12 @@ Available sound groups are:
 - weather
 - yardcare (e.g., chainsaw, lawn mower)
 
-
 More on sound groups below.
 
 ## Reqirements
 
-This tool is written in Python and requires Python 3.7+ and the following libraries:
-* pandas
-* matplotlib
-* seaborn
-* reportlab
-* Pillow
+This tool is written in Python. All requirements are noted in the installation instructions
+above and listed in *requirements.txt*. 
 
 ## Setup Instructions (from Linux command line)
 
@@ -270,6 +264,8 @@ group_score = max_score
 number of classes from that group are in the top_k scores. 
 - group_score is capped at 0.95.
 
+## How to Use the Log Data
+
 The code will create a csv file in *./logs*. If this
 directory does not exist, the code will create it.   The CSV format is 8 columns:
 
@@ -286,12 +282,14 @@ it will give you a sense for what kind of scores you are seeing, so that you can
 how you wish to set both *default_min_score* and individual *min_score*s for the groups
 you want to detect.
 
+There is a python tool developed specifically to visualize this data: 
+[SoundViz](https://github.com/cecat/soundviz).
+
 
 ## Tech Info
 
 - Languages & Frameworks:
   - Python
-  - Home Assistant Framework
 
 
 ### Other Notes
