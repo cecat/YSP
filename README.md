@@ -37,7 +37,7 @@ your entire system, potentially breaking other code)..
 
 ```
  python3.10 -m venv YSP-venv       # create a virtual environment
- source venv/bin/activate          # activate it
+ source YSP-venv/bin/activate          # activate it
 ```
 
 2. Install tensorflow for MacOS (tensorflow-macos) and (if you have Apple silicon)
