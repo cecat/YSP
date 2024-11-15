@@ -80,7 +80,7 @@ if sound_log:
     timestamp = datetime.now().strftime('%Y%m%d-%H%M') # timestamp for filename
     sound_log_path = os.path.join(sound_log_dir, f"{timestamp}.csv") # create the log file
     logger.debug(f"Creating {sound_log_path} for sound history analysis.")
-    logger.info(f"Yamnet Sound Profiler logging sounds to {sound_log_path}. Press ^C to stop")
+    logger.info(f"Yamnet Sound Profiler logging sounds to {sound_log_path} (press ^C to stop)")
 
     try:
         sound_log_file = open(sound_log_path, 'a', newline='')
