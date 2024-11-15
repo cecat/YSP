@@ -63,17 +63,24 @@ When you are done running YSP you can exit your virtual environment with *deacti
 
 The code uses a configuration file, *microphones.yaml*, to 
 specify sound sourceas (RTSP feeds) and to set up a number
-of options described below.
+of options described below. **You must at minimum put a valid
+RTSP path in microphones.yaml before running the code**.
 
-Once you have (at minimum) put your own RTSP feeds into *microhones.yaml*
+*Startup takes a 10-15 seconds*. If there are errors in the
+RTSP paths (e.g., if you did not edit microphones.yaml), even if you *^C*
+to exit there are 30s time-outs for the FFMPEG startup on each RTSP path that 
+will have to run their course.
+
+Once you have put your own RTSP feeds into *microhones.yaml*
 there are generally two ways to run.  First, if you want to watch the output
 (ideally while listening to the RTSP feed using something like VLC), set
-log_level to DEBUG and run from your command line:
+**log_level to DEBUG** in *microphones.yaml* and run from your command line:
 ```
 python yamcam.py
 ```
 Then, you may wish to run for a period of time collecting data but are not
-interested in watching:
+interested in watching. For this, set **log_level to INFO** in *micrphones.yaml*
+then:
 ```
 python yamcam.py &
 ```
@@ -82,12 +89,6 @@ then later when you want to stop it:
 fg
 ^c
 ```
-
-*Startup takes a 10-15 seconds*. If there are errors in the
-RTSP paths (e.g., if you did not edit microphones.yaml), even if you *^C*
-to exit there are 30s time-outs for the FFMPEG startup on each RTSP path that 
-will have to run their course.
-
 
 ### Customize the Configuration File (*microphones.yaml*)
 
