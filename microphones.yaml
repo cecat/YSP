@@ -13,8 +13,6 @@ general:
                              #   analysis of trends (it gets big very fast, use carefully).
                              #   Default is false
   log_everything: true        # Log classes/groups even if they are not specified in sounds/track below
-  ffmpeg_debug: true        # Log ffmpeg stderr (a firehose - includes errors and info)
-                             #   Must also have log_level set to DEBUG
 
 # EVENTS (define 'event' parameters)
 events:
@@ -25,16 +23,17 @@ events:
   decay: 10                     # Number of waveforms without the sound to consider 
                                 #   the sound event has stopped.
 
-
 # SOURCES
 
 cameras:
-  myCam:
+  SampleAmcrestCam:
     ffmpeg:
       inputs:
-        #- path: "rtsp://10.0.4.73:7447/65dd5a1900f4cb70dffa2143_1"
-        # tailscale
-      - path: "rtsp://100.112.45.90:7447/65dd5a1900f4cb70dffa2143_1"
+      - path: "rtsp://user:password@x.x.x.x:554/cam/realmonitor?channel=1&subtype=1"
+  SampleUnifiNVRCam:
+    ffmpeg:
+      inputs:
+      - path: "rtsp://101.112.45.93:7447/65dd5a1900f4cb70dffa2143_1"
 
 # sound groups to listen for, and optional individual thresholds (will override
 # reporting_threshold above in general settings). 
