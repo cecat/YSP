@@ -4,10 +4,11 @@ This project uses YAMNet to profile sounds heard by netwokred microphones,
 producing a log file (csv format) that can be visualized using
 [SoundViz](https://github.com/cecat/soundviz).
 
-This code is a work in progress and has only been tested with MacOS.
+This code is a work in progress and has only been tested with MacOS
+(Sequoia 15.1) with Apple (M2) silicon.
 
 Please report any issues
-[here](https://github.com/cecat/CeC-HA-Addons/issues). 
+[here](https://github.com/cecat/ysp/issues). 
 
 This project uses TensorFlow and the
 [YAMNet sound model](https://www.tensorflow.org/hub/tutorials/yamnet)
@@ -19,32 +20,40 @@ returns scores for each of its 521 sound classes.
 
 ## Installing YSP
 
-For MacOS, the installation process below uses a virtual environment,
-which is recommended but optional. One reason for creating and running
-in a virtual environment is that Tensorflow support for recent 
-versions of Python does not exist, thus the virtual environment we
-will create uses Python 3.10. 
+1. Clone this repository.  Navigate to a directory within which you
+want to place a directory with this code.  E.g., ~/funsoftware. 
+From within this directory, cloning the repository will create 
+a directory called YSP.
+```
+git clone git@github.com:cecat/ysp.git
+```
 
-1. Create and activate a virtual environment
+2. Drop into the new YSP directory, then create and activate a virtual environment.
+While optional, the installation process below uses a virtual environment.
+One reason for this is that Tensorflow support for recent 
+versions of Python does not exist, thus the virtual environment we
+will create uses Python 3.10 (and you may not want to downgrade
+your entire system, potentially breaking other code).. 
 
 ```
  python3.10 -m venv YSP-venv       # create a virtual environment
  source venv/bin/activate          # activate it
 ```
 
-2. Install tensorflow for MacOS (tensorflow-macos) and (if you have Apple silicon
-with GPUs) tensorflow-metal. Doesn't hurt to go ahead and make sure you have the 
-latest version of pip.
+2. Install tensorflow for MacOS (tensorflow-macos) and (if you have Apple silicon)
+and want to use the GPUs, tensorflow-metal. *This step needs to be done first*, before
+installing the rest of the dependencies. Also doesn't hurt to go ahead and make
+sure you have the latest version of pip.
 
 ```
- pip install tensorflow-macos      # first install MacOS-specific items
+ pip install tensorflow-macos    
  pip install tensorflow-metal
- pip install --upgrade pip         # optional but recommended
+ pip install --upgrade pip        
 ```
 
-3. Install the rest of the dependencies YSP requires
+3. Install the rest of the dependencies YSP requires.
 ```
- pip install -r requirements.txt   # not install the rest of the dependencies
+ pip install -r requirements.txt   
 ```
 
 When you are done running YSP you can exit your virtual environment with *deactivate YSP-venv*.
