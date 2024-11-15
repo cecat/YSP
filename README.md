@@ -65,6 +65,11 @@ The code uses a configuration file, *microphones.yaml*, to
 specify sound sourceas (RTSP feeds) and to set up a number
 of options described below.
 
+Startup takes a 10-15 seconds, especially if there are errors in the
+RTSP paths (e.g., if you did not edit microphones.yaml), even if you *^C*
+to exit there are 30s time-outs for the FFMPEG startup on each RTSP path that 
+will have to run their course.
+
 The code does the following (*italics* parameters are configurable):
 
 1. Analyze sound (in 0.975s chunks) using YAMNet, which produces scores for each
@@ -87,7 +92,7 @@ The code does the following (*italics* parameters are configurable):
    which visualizes events over time for each sound source, the distribution of 
    events by group, and the distribution of classes detected with each group.
 
-### Modify the Configuration File (*microphones.yaml*)
+### Customize the Configuration File (*microphones.yaml*)
 
 Here you will configure specifics including and RTSP feeds and various 
 parameters. Note that RTSP links have embedded credentials
@@ -95,7 +100,7 @@ parameters. Note that RTSP links have embedded credentials
 
 
 ```
-# SAMPLE CONFIG FILE TO GET STARTED
+# MICROPHONES.YAML
 # 
 general:
   noise_threshold: 0.1       # Filter out very very low scores
