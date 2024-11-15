@@ -131,7 +131,7 @@ class CameraAudioStream:
                 logger.debug(f"{self.camera_name}: FFmpeg process has terminated.")
                 break
             if time.time() - start_time > timeout_duration:
-                logger.warning(f"{self.camera_name}: FFmpeg process did not start within {timeout_duration} seconds. Terminating.")
+                logger.warning(f"{self.camera_name}: FFmpeg process did not start within {timeout_duration} seconds. Check your RTSP path.")
                 self.stop()
                 break
             time.sleep(1)
