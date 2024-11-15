@@ -1,5 +1,5 @@
 #
-# yamcam-CLI - CeC - November 2024
+# Yamcam Sound Profiler (YSP) - CeC - November 2024
 #
 # yamcam_config.py 
 #
@@ -45,7 +45,7 @@ shutdown_event = threading.Event()
 
 def check_for_log_dir():
     try:
-        print(f"Creating log file directory {sound_log_dir}")
+        print(f"INFO: Creating log file directory {sound_log_dir}")
         os.makedirs(sound_log_dir, exist_ok=True)
     except OSError as e:
         # Use print since logging is not configured yet
@@ -195,7 +195,7 @@ check_for_log_dir() # make sure /media/yamcam exists
 if logfile:
     timestamp = datetime.now().strftime('%Y%m%d-%H%M') # timestamp for filename
     log_path = os.path.join(log_dir, f"{timestamp}.log")
-    logger.debug(f"Creating {log_path} for longitudinal sound analysis.")
+    print(f"INFO: Creating {log_path} for longitudinal sound analysis.")
 
     if log_everything:
         logger.debug("Logging all classes and groups (log_everything = True)")

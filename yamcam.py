@@ -1,9 +1,8 @@
 #
-# yamcam CLI - CeC November 2024
+# Yamcam Sound Profiler (YSP) - CeC November 2024
 #
 # yamcam.py 
 #
-
 import time
 import threading
 import logging
@@ -59,7 +58,6 @@ signal.signal(signal.SIGTERM, shutdown)
 #                                                #
 ### ---------- SOUND ANALYSIS HUB -------------###
 #                                                #
-
 
 def analyze_callback(waveform, camera_name):
     try:
