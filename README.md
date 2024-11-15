@@ -36,8 +36,8 @@ will create uses Python 3.10 (and you may not want to downgrade
 your entire system, potentially breaking other code).. 
 
 ```
- python3.10 -m venv YSP-venv       # create a virtual environment
- source YSP-venv/bin/activate          # activate it
+ python3.10 -m venv YSP-venv       
+ source YSP-venv/bin/activate     
 ```
 
 2. Install tensorflow for MacOS (tensorflow-macos) and (if you have Apple silicon)
