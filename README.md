@@ -65,32 +65,29 @@ The code uses a configuration file, *microphones.yaml*, to
 specify sound sourceas (RTSP feeds) and to set up a number
 of options described below.
 
-Startup takes a 10-15 seconds, especially if there are errors in the
+Once you have (at minimum) put your own RTSP feeds into *microhones.yaml*
+there are generally two ways to run.  First, if you want to watch the output
+(ideally while listening to the RTSP feed using something like VLC), set
+log_level to DEBUG and run from your command line:
+```
+python yamcam.py
+```
+Then, you may wish to run for a period of time collecting data but are not
+interested in watching:
+```
+python yamcam.py &
+```
+then later when you want to stop it:
+```
+fg
+^c
+```
+
+*Startup takes a 10-15 seconds*. If there are errors in the
 RTSP paths (e.g., if you did not edit microphones.yaml), even if you *^C*
 to exit there are 30s time-outs for the FFMPEG startup on each RTSP path that 
 will have to run their course.
 
-The code does the following (*italics* parameters are configurable):
-
-1. Analyze sound (in 0.975s chunks) using YAMNet, which produces scores for each
-   of 521 sound classes. A **score** is YAMNet's certainty, from 0 to 1, that
-   the sound class is present in the sound sample waveform.
-2. Filter out all but the *top_k* sound classes - those whose scores
-   exceed *noise_threshold*.
-3. Aggregate those *top_k* scoring sound classes into groups such as "people," "music",
-   "insects," or "birds." This uses a modified yamnet_class_map.csv where each
-   of the 521 native YAMNet classes has been grouped and renamed as groupname.classname.
-   (more about this below)
-4. Assign a composite score to each group with classes that appear in the *top_k*,
-   based on the individual scores of the classes from that group that are detected
-   in the *top_k*. 
-5. Detect the start and end of "sound events" defined by three configurable
-   parameters (see configuration instructions below).
-6. Log detected sounds, groups, and sound events in a .csv file for analysis,
-   e.g., using 
-   [SoundViz](https://github.com/cecat/soundviz),
-   which visualizes events over time for each sound source, the distribution of 
-   events by group, and the distribution of classes detected with each group.
 
 ### Customize the Configuration File (*microphones.yaml*)
 
@@ -291,11 +288,32 @@ There is a python tool developed specifically to visualize this data:
 [SoundViz](https://github.com/cecat/soundviz).
 
 
-## Tech Info
+## Tech Info and What exactly this code does
 
 - Languages & Frameworks:
   - Python
 
+The code does the following (*italics* parameters are configurable):
+
+1. Analyze sound (in 0.975s chunks) using YAMNet, which produces scores for each
+   of 521 sound classes. A **score** is YAMNet's certainty, from 0 to 1, that
+   the sound class is present in the sound sample waveform.
+2. Filter out all but the *top_k* sound classes - those whose scores
+   exceed *noise_threshold*.
+3. Aggregate those *top_k* scoring sound classes into groups such as "people," "music",
+   "insects," or "birds." This uses a modified yamnet_class_map.csv where each
+   of the 521 native YAMNet classes has been grouped and renamed as groupname.classname.
+   (more about this below)
+4. Assign a composite score to each group with classes that appear in the *top_k*,
+   based on the individual scores of the classes from that group that are detected
+   in the *top_k*. 
+5. Detect the start and end of "sound events" defined by three configurable
+   parameters (see configuration instructions below).
+6. Log detected sounds, groups, and sound events in a .csv file for analysis,
+   e.g., using 
+   [SoundViz](https://github.com/cecat/soundviz),
+   which visualizes events over time for each sound source, the distribution of 
+   events by group, and the distribution of classes detected with each group.
 
 ### Other Notes
 
