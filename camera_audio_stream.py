@@ -54,6 +54,7 @@ class CameraAudioStream:
         self.timeout_thread = None
         self.running = False
         self.lock = threading.Lock()
+        self.ffmpeg_started_event = threading.Event() # flag for successful connection
 
     def start(self):
         with self.lock:
@@ -121,7 +122,7 @@ class CameraAudioStream:
         flags = fcntl.fcntl(fd, fcntl.F_GETFL)
         fcntl.fcntl(fd, fcntl.F_SETFL, flags | os.O_NONBLOCK)
 
-    def _timeout_monitor(self):
+    def old_timeout_monitor(self):
         timeout_duration = 30  # seconds
         start_time = time.time()
         while self.running and not self.shutdown_event.is_set():
@@ -134,6 +135,17 @@ class CameraAudioStream:
                 self.stop()
                 break
             time.sleep(1)
+
+    def _timeout_monitor(self):
+        timeout_duration = 30  # seconds
+        # Wait for ffmpeg_started_event to be set, with a timeout
+        if not self.ffmpeg_started_event.wait(timeout_duration):  # <-- Modified this block
+            # Timeout occurred
+            logger.warning(f"{self.camera_name}: FFmpeg process did not start within {timeout_duration} seconds. Terminating.")
+            self.stop()
+        else:
+            # FFmpeg started successfully
+            logger.debug(f"{self.camera_name}: FFmpeg process has started successfully.")
 
     def read_stream(self):
         raw_audio = b""
@@ -196,7 +208,11 @@ class CameraAudioStream:
         elif "Immediate exit requested" in line_decoded:
             logger.debug(f"{self.camera_name}: Immediate exit requested.")
             self.stop()
-        # Add more error handling as needed
+        # detected successful initiation of ffmpeg stream
+        elif "Press [q] to stop" in line_decoded:  # <-- Added this condition
+            logger.debug(f"{self.camera_name}: FFmpeg process has started successfully.")
+            self.ffmpeg_started_event.set()  # <-- Added this line
+
 
     def stop(self):
         with self.lock:
@@ -224,12 +240,11 @@ class CameraAudioStream:
                         self.process.stderr.close()
                     self.process = None
             # Wait for threads to finish
-            if self.read_thread and self.read_thread.is_alive():
+            current_thread = threading.current_thread()  # <-- Added this line
+            if self.read_thread and self.read_thread.is_alive() and self.read_thread != current_thread:
                 self.read_thread.join(timeout=5)
-            if self.error_thread and self.error_thread.is_alive():
+            if self.error_thread and self.error_thread.is_alive() and self.error_thread != current_thread:
                 self.error_thread.join(timeout=5)
-            if self.timeout_thread and self.timeout_thread.is_alive():
+            if self.timeout_thread and self.timeout_thread.is_alive() and self.timeout_thread != current_thread:
                 self.timeout_thread.join(timeout=5)
             logger.debug(f"{self.camera_name}: Audio stream stopped.")
-
-
