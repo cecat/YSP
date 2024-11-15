@@ -122,26 +122,12 @@ class CameraAudioStream:
         flags = fcntl.fcntl(fd, fcntl.F_GETFL)
         fcntl.fcntl(fd, fcntl.F_SETFL, flags | os.O_NONBLOCK)
 
-    def old_timeout_monitor(self):
-        timeout_duration = 30  # seconds
-        start_time = time.time()
-        while self.running and not self.shutdown_event.is_set():
-            if self.process.poll() is not None:
-                # Process has terminated
-                logger.debug(f"{self.camera_name}: FFmpeg process has terminated.")
-                break
-            if time.time() - start_time > timeout_duration:
-                logger.warning(f"{self.camera_name}: FFmpeg process did not start within {timeout_duration} seconds. Check your RTSP path.")
-                self.stop()
-                break
-            time.sleep(1)
-
     def _timeout_monitor(self):
         timeout_duration = 30  # seconds
         # Wait for ffmpeg_started_event to be set, with a timeout
         if not self.ffmpeg_started_event.wait(timeout_duration):  # <-- Modified this block
             # Timeout occurred
-            logger.warning(f"{self.camera_name}: FFmpeg process did not start within {timeout_duration} seconds. Terminating.")
+            logger.warning(f"{self.camera_name}: FFmpeg process did not start within {timeout_duration} seconds. Check your RTSP path.")
             self.stop()
         else:
             # FFmpeg started successfully
