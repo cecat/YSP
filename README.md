@@ -17,6 +17,28 @@ continually takes 0.975s samples from RTSP feeds, using FFMPEG, and
 pushes these samples to the YAMNet sound classifier model, which
 returns scores for each of its 521 sound classes.
 
+## Installing YSP
+
+For MacOS, the installation process below uses a virtual environment,
+which is recommended but optional. One reason for creating and running
+in a virtual environment is that Tensorflow support for recent 
+versions of Python does not exist, thus the virtual environment we
+will create uses Python 3.10. 
+
+```
+ python3.10 -m venv YSP-venv       # create a virtual environment
+ source venv/bin/activate          # activate it
+ pip install tensorflow-macos      # first install MacOS-specific items
+ pip install tensorflow-metal
+ pip install --upgrade pip         # optional but recommended
+ pip install -r requirements.txt   # not install the rest of the dependencies
+
+<see below for how to set up and use YSP>
+ deactivate YSP-venv               # when finished, drop out of the venv
+```
+
+## Using YSP
+
 The code uses a configuration file, *microphones.yaml*, to 
 specify sound sourceas (RTSP feeds) and to set up a number
 of options described below.
