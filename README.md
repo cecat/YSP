@@ -25,17 +25,30 @@ in a virtual environment is that Tensorflow support for recent
 versions of Python does not exist, thus the virtual environment we
 will create uses Python 3.10. 
 
+1. Create and activate a virtual environment
+
 ```
  python3.10 -m venv YSP-venv       # create a virtual environment
  source venv/bin/activate          # activate it
+```
+
+2. Install tensorflow for MacOS (tensorflow-macos) and (if you have Apple silicon
+with GPUs) tensorflow-metal. Doesn't hurt to go ahead and make sure you have the 
+latest version of pip.
+
+```
  pip install tensorflow-macos      # first install MacOS-specific items
  pip install tensorflow-metal
  pip install --upgrade pip         # optional but recommended
- pip install -r requirements.txt   # not install the rest of the dependencies
-
-<see below for how to set up and use YSP>
- deactivate YSP-venv               # when finished, drop out of the venv
 ```
+
+3. Install the rest of the dependencies YSP requires
+```
+ pip install -r requirements.txt   # not install the rest of the dependencies
+```
+
+When you are done running YSP you can exit your virtual environment with *deactivate YSP-venv*.
+
 
 ## Using YSP
 
