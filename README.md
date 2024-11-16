@@ -26,7 +26,7 @@ From within this directory, cloning the repository will create
 a directory called *ysp* that you'll drop into:
 ```
 git clone git@github.com:cecat/ysp.git
- cd ysp
+cd ysp
 ```
 
 2. Create and activate a virtual environment.
@@ -37,8 +37,8 @@ will create uses Python 3.10 (and you may not want to downgrade
 your entire system, potentially breaking other code):
 
 ```
- python3.10 -m venv YSP-venv       
- source YSP-venv/bin/activate     
+python3.10 -m venv YSP-venv       
+source YSP-venv/bin/activate     
 ```
 
 2. Install tensorflow for MacOS (tensorflow-macos) and (if you have Apple silicon)
@@ -47,14 +47,14 @@ installing the rest of the dependencies. Also doesn't hurt to go ahead and make
 sure you have the latest version of pip.
 
 ```
- pip install tensorflow-macos    
- pip install tensorflow-metal
- pip install --upgrade pip        
+pip install tensorflow-macos    
+pip install tensorflow-metal
+pip install --upgrade pip        
 ```
 
 3. Install the rest of the dependencies YSP requires.
 ```
- pip install -r requirements.txt   
+pip install -r requirements.txt   
 ```
 
 When you are done running YSP you can exit your virtual environment with *deactivate YSP-venv*.
