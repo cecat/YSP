@@ -84,7 +84,7 @@ class CameraStreamSupervisor:
                     stream.stop()
                 except Exception as e:
                     logger.error(f"Error stopping stream {stream.camera_name}: {e}", exc_info=True)
-            logger.warning("All audio streams have been requested to stop.")
+            logger.debug("All audio streams have been requested to stop.")
             logger.info("Cleaning up.")
         try:
             self.supervisor_thread.join(timeout=5)  # Wait up to 5 seconds for supervisor_thread to finish

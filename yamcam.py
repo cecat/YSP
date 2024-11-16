@@ -4,7 +4,7 @@
 # yamcam.py 
 #
 import time
-import threading
+import threading 
 import logging
 import signal
 import sys
@@ -20,6 +20,7 @@ from yamcam_config import logger
 from yamcam_supervisor import CameraStreamSupervisor  # Import the supervisor
 from yamcam_config import interpreter, input_details, output_details
 
+# Not using at the moment...but handy to resurrect for any thorny bugs in future
 # Enable faulthandler to dump tracebacks
 faulthandler.enable()
 

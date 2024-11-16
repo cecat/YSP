@@ -57,7 +57,7 @@ import os
 import atexit
 import csv
 from datetime import datetime
-import threading 
+from threading import Lock
 from collections import deque
 import numpy as np
 import json
@@ -70,10 +70,14 @@ from yamcam_config import (
 logger = yamcam_config.logger
 
 #                                                #
+### ---------- LOCKS for SAFE Threads -----------#
+#                                                #
+sound_log_lock = Lock()             # lock the shared log file when writing 
+interpreter_lock = Lock() # lock the shared interpreter when in use
+
+#                                                #
 ### ---------- SOUND LOG CSV SETUP --------------###
 #                                                #
-
-sound_log_lock = threading.Lock()  # lock the file when writing since we have multiple threads writing
 
 if sound_log:
 
@@ -117,7 +121,7 @@ atexit.register(close_sound_log_file)
 
      # -------- GLOBALS FOR SUMMARY REPORTING
 sound_event_tracker = {}
-sound_event_lock = threading.Lock()
+sound_event_lock = Lock()
 event_counts = {}
 
      # -------- DATA STRUCTS FOR EVENTS
@@ -130,7 +134,7 @@ sound_windows = {}        # {camera_name: {sound_class: deque}}
 active_sounds = {}        # {camera_name: {sound_class: bool}}
 last_detection_time = {}  # {camera_name: {sound_class: timestamp}}
 
-state_lock = threading.Lock()
+state_lock = Lock()
 
 
      # -------- LOG SOUND EVENT
@@ -170,12 +174,14 @@ def analyze_audio_waveform(waveform, camera_name, interpreter, input_details, ou
 
         # Invoke the YAMNET inference engine 
         try:
-            # Set input tensor and invoke interpreter
-            interpreter.set_tensor(input_details[0]['index'], waveform)
-            interpreter.invoke()
+            # Lock the shared interpreter
+            with interpreter_lock:
+                # Set input tensor and invoke interpreter
+                interpreter.set_tensor(input_details[0]['index'], waveform)
+                interpreter.invoke()
 
-            # Get output scores; convert to a copy to avoid holding internal references
-            scores = np.copy(interpreter.get_tensor(output_details[0]['index']))  
+                # Get output scores; convert to a copy to avoid holding internal references
+                scores = np.copy(interpreter.get_tensor(output_details[0]['index']))  
 
             if scores.size == 0:
                 logger.warning(f"{camera_name}: No scores available to analyze.")
