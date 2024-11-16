@@ -36,6 +36,7 @@ will create uses Python 3.10 (and you may not want to downgrade
 your entire system, potentially breaking other code).. 
 
 ```
+ cd ysp
  python3.10 -m venv YSP-venv       
  source YSP-venv/bin/activate     
 ```
