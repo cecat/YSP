@@ -23,12 +23,12 @@ returns scores for each of its 521 sound classes.
 1. Clone this repository.  Navigate to a directory within which you
 want to place a directory with this code.  E.g., ~/funsoftware. 
 From within this directory, cloning the repository will create 
-a directory called YSP.
+a directory called *ysp*.
 ```
 git clone git@github.com:cecat/ysp.git
 ```
 
-2. Drop into the new YSP directory, then create and activate a virtual environment.
+2. Drop into the new *ysp* directory, then create and activate a virtual environment.
 While optional, the installation process below uses a virtual environment.
 One reason for this is that Tensorflow support for recent 
 versions of Python does not exist, thus the virtual environment we
