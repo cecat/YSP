@@ -89,11 +89,18 @@ if sound_log:
     try:
         sound_log_file = open(sound_log_path, 'a', newline='')
         sound_log_writer = csv.writer(sound_log_file)
-        # write header row
+        # write header row and metadata
         header = ["datetime", "sound_source", "group_name", "group_score", "class_name",
                   "class_score", "event_start", "event_end"]
+        # from microphones.yaml save:  window_detect, persistence, decay
+        metadata_key = ["#","window_detect", "persistence", "config"]
+        metadata = ["#", yamcam_config.window_detect,
+                    yamcam_config.persistence,
+                    yamcam_config.decay]
         with sound_log_lock:
             sound_log_writer.writerow(header)
+            sound_log_writer.writerow(metadata_key)
+            sound_log_writer.writerow(metadata)
             sound_log_file.flush()
 
     except Exception as e:
